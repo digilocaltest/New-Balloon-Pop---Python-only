@@ -38,6 +38,16 @@ screen.blit(balloon, balloon_rect)
 
 
 while True:
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+      pygame.quit
+      raise SystemExit
+    elif event.type == pygame.MOUSEBUTTONDOWN:
+      x, y = event.pos
+      if balloon_rect.collidepoint(x, y):
+        balloon_rect.left = balloon_rect.width + (random.random() *(screen.get_width() - balloon_rect.width *2))
+        balloon_rect.top = screen.get_height() - balloon_rect.height / 2
+          
   balloon_rect.top -= 15
   balloon_rect.left += drift
   # controles de posicion del glovo
