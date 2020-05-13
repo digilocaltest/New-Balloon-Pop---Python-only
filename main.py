@@ -2,8 +2,29 @@
 import tkinter as tk
 import pygame, random, sys
 from pygame.locals import *
-# importo subfunctions from pygame
-##from pygame.locals import *
+
+class Balloon():
+  def __init__(self):
+  #Goblo
+    self.balloon = pygame.image.load('balloon.png')
+    self.balloon_rect = self.balloon.get_rect()
+    self.balloon_rect.left = self.balloon_rect.width + (random.random() *(screen.get_width() - 
+    self.balloon_rect.width *2)) 
+    self.balloon_rect.top = screen.get_height() - self.balloon_rect.height / 2
+    # lo separamos de la izquierda su tamaño generemos aleatorio y lo multiplicamos por el ancho de la pantalla menos el ancho del rectangulo * 2 para que aparezca solo por en medio
+    if random.random() > 0.5: # direccion aleatiorio en Y
+      self.drift = 2
+    else:
+      self.drift = -2
+  def update(self):
+    self.balloon_rect.top -= 2
+    self.balloon_rect.left += self.drift
+    # controles de posicion del glovo
+    if self.balloon_rect.top < 2: # si llega arriba lo bajamos
+      self.balloon_rect.top = screen.get_height() - self.balloon_rect.height / 2
+    elif self.balloon_rect.left < 2 or self.balloon_rect.left > screen.get_width() - self.balloon_rect.width - 2:
+      self.drift *= -1
+    screen.blit(self.balloon, self.balloon_rect)
 # despues necesitamos inicialicar nuestro pygame
 pygame.init()
 # ahora configurarmos el tamaño de nuestra ventana y le ponemos titulo
@@ -16,26 +37,20 @@ bg_rect = background.get_rect()
 bg_rect.left = 0
 bg_rect.top = 0
 test = screen.get_width()
-#Goblo
-balloon = pygame.image.load('balloon.png')
-balloon_rect = balloon.get_rect()
-balloon_rect.left = balloon_rect.width + (random.random() *(screen.get_width() - balloon_rect.width *2)) # lo separamos de la izquierda su tamaño generemos aleatorio y lo multiplicamos por el ancho de la pantalla menos el ancho del rectangulo * 2 para que aparezca solo por en medio
 
-# AHORA LA PARTE SUPERIOR DEL BALLOON
-balloon_rect.top = screen.get_height() - balloon_rect.height / 2
 # y le ponemos una velocidad de agetreo
-drift = 2
 #Creamos un relog para controlar la velocidad del juego
 clock = pygame.time.Clock()
 
 # Ahora enviamos el bg a la ventana
 # le tenemos que pasar tanto la imagen como el rectangulo.
-screen.blit(background, bg_rect)
-screen.blit(balloon, balloon_rect)
+#screen.blit(background, bg_rect)
 
-#Al final tenemos que actualizar la ventana  para asegurarnos que nuestra imagen se ve bien.
-# esto tiene que ir siempre al final de codigo
-
+# Creamos un array apra almacenar todos nuestros objetos ballon
+balloons = []
+# loop te mañano 10 para generar 10 balloons y los agregamos al array
+for x in range(10):
+  balloons.append(Balloon())
 
 while True:
   for event in pygame.event.get():
@@ -48,14 +63,8 @@ while True:
         balloon_rect.left = balloon_rect.width + (random.random() *(screen.get_width() - balloon_rect.width *2))
         balloon_rect.top = screen.get_height() - balloon_rect.height / 2
           
-  balloon_rect.top -= 15
-  balloon_rect.left += drift
-  # controles de posicion del glovo
-  if balloon_rect.top < 2: # si llega arriba lo bajamos
-    balloon_rect.top = screen.get_height() - balloon_rect.height / 2
-  elif balloon_rect.left < 2 or balloon_rect.left > screen.get_width() - balloon_rect.width - 2:
-    drift *= -1
   screen.blit(background, bg_rect)
-  screen.blit(balloon, balloon_rect)
+  for Balloon in balloons:
+    Balloon.update()
   pygame.display.update()
   clock.tick(60) #slow the fps
