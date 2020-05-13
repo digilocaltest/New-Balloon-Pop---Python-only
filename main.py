@@ -38,7 +38,7 @@ screen.blit(balloon, balloon_rect)
 
 
 while True:
-  balloon_rect.top -= 2
+  balloon_rect.top -= 15
   balloon_rect.left += drift
   # controles de posicion del glovo
   if balloon_rect.top < 2: # si llega arriba lo bajamos
